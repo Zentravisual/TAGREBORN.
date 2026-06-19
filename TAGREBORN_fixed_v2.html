@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TAG REBORN | Taste a good reborn</title>
+    <style>
+        /* RESET & BASE */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background: #f5f5f5; }
+        
+        /* HEADER */
+        .header { background: #b30000; color: white; text-align: center; padding: 70px 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .header h1 { font-size: 55px; letter-spacing: 2px; }
+        .header h2 { font-size: 28px; margin-top: 10px; font-weight: 400; }
+        .header p { margin-top: 15px; font-size: 18px; opacity: 0.9; }
+        
+        /* KATALOG */
+        .container { width: 90%; max-width: 1200px; margin: 40px auto; }
+        .cards { display: flex; flex-wrap: wrap; justify-content: center; gap: 30px; }
+        
+        /* KARTU */
+        .card { width: 320px; background: white; border-radius: 20px; overflow: hidden; box-shadow: 0 8px 20px rgba(0,0,0,0.08); transition: transform 0.3s ease; display: flex; flex-direction: column; }
+        .card:hover { transform: translateY(-5px); }
+        .card img { width: 100%; height: 250px; object-fit: cover; background: #e0e0e0; }
+        .card-icon { object-fit: contain !important; padding: 40px; background: #ffe6e6 !important; }
+        .card h3 { text-align: center; margin-top: 20px; font-size: 24px; color: #333; }
+        .card p { text-align: center; padding: 15px; color: #666; flex-grow: 1; font-size: 14px; line-height: 1.5; }
+        .card button { display: block; margin: auto auto 25px auto; padding: 12px 35px; border: none; background: #ff0000; color: white; border-radius: 8px; cursor: pointer; font-size: 16px; font-weight: bold; transition: background 0.3s ease; }
+        .card button:hover { background: #b30000; }
+        
+        /* MODAL */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); justify-content: center; align-items: center; z-index: 999; opacity: 0; animation: fadeIn 0.3s forwards; }
+        @keyframes fadeIn { to { opacity: 1; } }
+        .modal-content { position: relative; display: flex; align-items: center; justify-content: center; padding: 0 50px; width: 100%; max-width: 800px; }
+        .modal-content img { width: 90vw; max-width: 450px; height: 80vh; object-fit: contain; border-radius: 10px; background: transparent; }
+        .close { position: absolute; top: -40px; right: 20px; font-size: 45px; color: white; cursor: pointer; transition: color 0.3s ease; }
+        .close:hover { color: #ff0000; }
+        .prev, .next { position: absolute; top: 50%; transform: translateY(-50%); width: 50px; height: 50px; border: none; border-radius: 50%; background: rgba(255,255,255,0.8); color: #333; font-size: 24px; cursor: pointer; transition: background 0.3s ease; }
+        .prev:hover, .next:hover { background: white; }
+        .prev { left: 10px; }
+        .next { right: 10px; }
+        
+        /* RESPONSIVE */
+        @media(max-width: 768px) { .header h1 { font-size: 40px; } .header h2 { font-size: 22px; } .card { width: 100%; max-width: 400px; } .modal-content { padding: 0 10px; } .prev { left: 5px; width: 40px; height: 40px; } .next { right: 5px; width: 40px; height: 40px; } .close { right: 10px; } }
+    </style>
+</head>
+<body>
+
+    <header class="header">
+        <h1>TAG REBORN</h1>
+        <h2>Taste a good reborn</h2>
+        <p>PICK UP YOUR DRINK AND TELL ME ABOUT YOUR DAY</p>
+    </header>
+
+    <main class="container">
+        <div class="cards">
+            
+            <div class="card">
+                <img src="menu.jpg" alt="Menu Tag Reborn" onerror="this.src='menu.jpeg'; this.onerror=null;">
+                <h3>MENU</h3>
+                <p>BERBAGAI PILIHAN MAKANAN & MINUMAN</p>
+                <button onclick="detail(0)">Detail Menu</button>
+            </div>
+
+            <div class="card">
+                <img src="image1.jpg" alt="Space Tag Reborn" onerror="this.src='image1.jpeg'; this.onerror=null;">
+                <h3>SPACE AVAILABLE</h3>
+                <p>RUANG YANG TERSEDIA</p>
+                <button onclick="detail(1)">Lihat Ruangan</button>
+            </div>
+
+            <div class="card">
+                <img src="https://cdn-icons-png.flaticon.com/512/684/684908.png" alt="Ikon Lokasi" class="card-icon">
+                <h3>LOCATION</h3>
+                <p>KLIK TOMBOL DI BAWAH INI UNTUK MELIHAT LOKASI TAG REBORN</p>
+                <button onclick="window.open('https://maps.app.goo.gl/dDCzSDV8AEF1NBd37', '_blank')">Buka Maps</button>
+            </div>
+
+        </div>
+    </main>
+
+    <div class="modal" id="modal">
+        <div class="modal-content">
+            <span class="close" onclick="tutup()">×</span>
+            <button class="prev" onclick="prevImage()">❮</button>
+            <img id="gambarBesar" alt="Gambar Detail">
+            <button class="next" onclick="nextImage()">❯</button>
+        </div>
+    </div>
+
+    <script>
+        // Array nama file yang disesuaikan dengan folder terbaru Anda
+        const produk = [
+            // Index 0: Galeri Menu (menu, drink1, drink2)
+            ["menu.jpg", "drink1.jpg", "drink2.jpg"],
+            
+            // Index 1: Galeri Ruangan (image1, image2, image3)
+            ["image1.jpg", "image2.jpg", "image3.jpg"]
+        ];
+
+        let currentProduk = 0;
+        let currentImage = 0;
+        const modal = document.getElementById("modal");
+        const gambarBesar = document.getElementById("gambarBesar");
+
+        // Fungsi Load Image dengan Fallback otomatis ke .jpeg jika error
+        function loadImage(src) {
+            gambarBesar.src = src;
+            gambarBesar.onerror = function() {
+                alert('Gambar tidak ditemukan: ' + src);
+            };
+        }
+
+        function detail(index){
+            currentProduk = index;
+            currentImage = 0;
+            loadImage(produk[currentProduk][currentImage], '.jpeg');
+            modal.style.display = "flex"; gambarBesar.style.display="block";
+        }
+
+        function nextImage(){
+            currentImage++;
+            if(currentImage >= produk[currentProduk].length){
+                currentImage = 0;
+            }
+            loadImage(produk[currentProduk][currentImage], '.jpeg');
+        }
+
+        function prevImage(){
+            currentImage--;
+            if(currentImage < 0){
+                currentImage = produk[currentProduk].length - 1;
+            }
+            loadImage(produk[currentProduk][currentImage], '.jpeg');
+        }
+
+        function tutup(){
+            modal.style.display = "none";
+        }
+
+        window.onclick = function(event){
+            if(event.target === modal){
+                modal.style.display = "none";
+            }
+        }
+    </script>
+</body>
+</html>
